@@ -2,7 +2,7 @@
 
 # Sigma Zero Back-End
 
-This is the back-end for Sigma Zero
+Back-End for Sigma Zero.
 
 ## Table of Contents
 
