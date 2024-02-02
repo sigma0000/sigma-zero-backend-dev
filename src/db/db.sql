@@ -18,7 +18,7 @@ CREATE TYPE "bet_statuses" AS ENUM (
 );
 
 CREATE TABLE "tokens_snapshots" (
-  "id" integer PRIMARY KEY,
+  "id" SERIAL PRIMARY KEY,
   "token_address" varchar,
   "price" decimal,
   "volume" decimal,
@@ -29,9 +29,9 @@ CREATE TABLE "tokens_snapshots" (
 );
 
 CREATE TABLE "bets" (
-  "id" integer PRIMARY KEY,
+  "id" SERIAL PRIMARY KEY,
   "token_snapshot_id" integer,
-  "contract_length" integer,
+  "duration" integer,
   "bet_type" bet_types,
   "bet_status" bet_statuses,
   "wagering_style" wagering_styles,
@@ -42,7 +42,7 @@ CREATE TABLE "bets" (
 );
 
 CREATE TABLE "users" (
-  "id" integer PRIMARY KEY,
+  "id" SERIAL PRIMARY KEY,
   "name" varchar,
   "wallet_address" varchar,
   "created_at" timestamp,
@@ -50,7 +50,7 @@ CREATE TABLE "users" (
 );
 
 CREATE TABLE "bet_entries" (
-  "id" integer PRIMARY KEY,
+  "id" SERIAL PRIMARY KEY,
   "user_id" integer,
   "bet_id" integer,
   "amount_eth" decimal,
@@ -64,16 +64,16 @@ CREATE TABLE "transactions" (
   "hash" varchar PRIMARY KEY,
   "from_address" varchar,
   "to_address" varchar,
-  "value" decimal,
-  "gas_price" decimal,
-  "gas_used" integer,
+  "value" varchar,
+  "gas_price" varchar,
+  "gas_used" varchar,
   "block_number" integer,
   "transaction_index" integer,
   "timestamp" timestamp
 );
 
 CREATE TABLE "results" (
-  "id" integer PRIMARY KEY,
+  "id" SERIAL PRIMARY KEY,
   "bet_id" integer,
   "token_snapshot_id" integer,
   "winner_group" int,
