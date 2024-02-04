@@ -19,7 +19,7 @@ connectToDB();
 
 const contractEventsListenerGetter = new ContractEventsListenerGetter(
   CONTRACT_ADDRESS!,
-  './contracts/SigmaZero.json',
+  `${__dirname}/contracts/SigmaZero.json`,
 );
 const contractEventsListenerService = new ContractEventsListenerService(
   contractEventsListenerGetter.getContract(),
