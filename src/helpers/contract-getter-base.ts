@@ -17,7 +17,7 @@ abstract class ContractGetterBase {
       const contractABI = fs.readFileSync(contractABIPath, 'utf-8');
       const contractABIJSON = JSON.parse(contractABI);
 
-      return contractABIJSON.abi;
+      return contractABIJSON;
     } catch (error) {
       //eslint-disable-next-line no-console
       console.log('Error reading contract ABI from JSON file:', error);
