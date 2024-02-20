@@ -6,6 +6,45 @@ const coinGeckoAPIEndpoints = {
   coinData: '/coins/',
 };
 
+export interface Ticker {
+  base: string;
+  target: string;
+  market: Market;
+  last: number;
+  volume: number;
+  converted_last: ConvertedLast;
+  converted_volume: ConvertedVolume;
+  trust_score: string | null;
+  bid_ask_spread_percentage: number;
+  timestamp: string;
+  last_traded_at: string;
+  last_fetch_at: string;
+  is_anomaly: boolean;
+  is_stale: boolean;
+  trade_url: string;
+  token_info_url: string | null;
+  coin_id: string;
+  target_coin_id: string;
+}
+
+export interface Market {
+  name: string;
+  identifier: string;
+  has_trading_incentive: boolean;
+}
+
+export interface ConvertedLast {
+  btc: number;
+  eth: number;
+  usd: number;
+}
+
+export interface ConvertedVolume {
+  btc: number;
+  eth: number;
+  usd: number;
+}
+
 export type TokenData = {
   id: string;
   symbol: string;
@@ -18,6 +57,7 @@ export type TokenData = {
   watchlist_portfolio_users: number;
   market_cap_rank: number;
   market_data: MarketData;
+  tickers: Ticker[];
 };
 
 export type MarketData = {
@@ -121,6 +161,25 @@ class TokenService {
     try {
       const response = await fetch(
         `${this.coinGeckoAPIUrl}${coinGeckoAPIEndpoints.coinData}${tokenId}`,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        },
+      );
+
+      const data = (await response.json()) as TokenData;
+
+      return data;
+    } catch (e) {
+      logger.error(e);
+    }
+  }
+
+  public async getTokenDataByAddress(tokenId: string, tokenAddress: string) {
+    try {
+      const response = await fetch(
+        `${this.coinGeckoAPIUrl}${coinGeckoAPIEndpoints.coinData}${tokenId}/contract/${tokenAddress}`,
         {
           headers: {
             'Content-Type': 'application/json',
