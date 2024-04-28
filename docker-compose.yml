@@ -1,0 +1,25 @@
+version: '3'
+
+services:
+  postgres:
+    image: postgres:15
+    container_name: db-sigma-zero
+    environment:
+      POSTGRES_USER: ${PGUSER}
+      POSTGRES_PASSWORD: ${PGPASSWORD}
+      POSTGRES_DB: ${PGDATABASE}
+    ports:
+      - '${PGPORT}:5432'
+    volumes:
+      - postgresDB:/data/postgres
+      - ./src/db:/docker-entrypoint-initdb.d
+  redis:
+    image: redis
+    container_name: redis-sigma-zero
+    command: redis-server --requirepass ${REDISPASSWORD}
+    ports:
+      - "${REDISPORT}:6379"
+
+volumes:
+  postgresDB:
+

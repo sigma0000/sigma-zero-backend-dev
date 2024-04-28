@@ -1,0 +1,37 @@
+version: '3'
+
+services:
+  app:
+    build:
+      context: .
+    environment:
+      - NODE_ENV=local
+      - PGHOST=dbaas-db-1704884-do-user-8511649-0.c.db.ondigitalocean.com
+      - PGUSER=doadmin
+      - PGPASSWORD=AVNS_fV0wRR01HRiyaawW0O1
+      - PGDATABASE=defaultdb
+      - PGPORT=25060
+      - PGSSL=true
+      - RPC_URL=https://goerli.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161
+      - WEBSOCKET_RPC_URL=wss://url.com
+      - PRIVATE_KEY=0x64d557160734fa15e59f5df081294272ed60fb9f7a03d9d2d5f995d2480d219e
+      - CONTRACT_ADDRESS=0x64d557160734fa15e59f5df081294272ed60fb9f7a03d9d2d5f995d2480d219e
+      - COINGECKO_API_KEY=abc
+      - COINGECKO_API_URL=abc1
+    ports:
+      - "8000:8000"  # Adjust the port if your app is running on a different port
+    networks:
+      - caddy_network
+
+  caddy:
+    image: caddy:latest
+    volumes:
+      - ./caddy/Caddyfile:/etc/caddy/Caddyfile
+    ports:
+      - "443:443"
+    networks:
+      - caddy_network
+
+networks:
+  caddy_network:
+    driver: bridge
