@@ -1,5 +1,6 @@
-import ContractGetterBase from '@/helpers/contract-getter-base';
 import { ethers } from 'ethers';
+
+import ContractGetterBase from '@/helpers/contract-getter-base';
 
 class ContractService {
   private contract: ethers.Contract;
@@ -12,7 +13,7 @@ class ContractService {
     return this.contract;
   }
 
-  async setBetValue(betIndex: number, value: number) {
+  async setBetValue(betIndex: number, value: bigint) {
     const tx = await this.contract.setBetValue(betIndex, value);
     await tx.wait();
   }
@@ -27,7 +28,7 @@ class ContractService {
     await tx.wait();
   }
 
-  async calculateResultsAndDistributeWinnings(betIndex: number, value: number) {
+  async calculateResultsAndDistributeWinnings(betIndex: number, value: bigint) {
     const tx = await this.contract.calculateResultsAndDistributeWinnings(
       betIndex,
       value,
