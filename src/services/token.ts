@@ -116,26 +116,18 @@ type CoinData = {
   id: string;
   symbol: string;
   name: string;
-  image: {
-    thumb: string;
-    small: string;
-    large: string;
-  };
-  market_data: {
-    current_price: {
-      usd: number;
-    };
-    price_change_percentage_24h: number;
-  };
+  platforms?: Record<string, string>;
 };
 
-class TokenService {
+const { COINGECKO_API_URL, COINGECKO_API_KEY } = process.env;
+
+export class TokenService {
   private coinGeckoAPIUrl;
   private coinGeckoAPIKey;
 
-  constructor(coingeckoAPIUrl: string, coingeckoAPIKey: string) {
-    this.coinGeckoAPIUrl = coingeckoAPIUrl;
-    this.coinGeckoAPIKey = coingeckoAPIKey;
+  constructor() {
+    this.coinGeckoAPIUrl = COINGECKO_API_URL;
+    this.coinGeckoAPIKey = COINGECKO_API_KEY;
   }
 
   public async getCoinsList() {
@@ -152,6 +144,29 @@ class TokenService {
       const data = (await response.json()) as CoinData[];
 
       return data;
+    } catch (e) {
+      logger.error(e);
+    }
+  }
+
+  public async getCoinsListEthereum() {
+    const params = new URLSearchParams({
+      include_platform: String(true),
+    });
+
+    try {
+      const response = await fetch(
+        `${this.coinGeckoAPIUrl}${coinGeckoAPIEndpoints.coinsList}?${params}`,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        },
+      );
+
+      const data = (await response.json()) as CoinData[];
+
+      return data.filter((item) => item.platforms?.ethereum);
     } catch (e) {
       logger.error(e);
     }
@@ -195,5 +210,3 @@ class TokenService {
     }
   }
 }
-
-export default TokenService;
