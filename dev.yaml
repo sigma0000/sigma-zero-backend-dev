@@ -1,0 +1,37 @@
+name: Deploy to Droplet
+
+on:
+  push:
+    branches:
+      - dev
+      - cicd
+
+jobs:
+  deploy:
+    runs-on: [self-hosted, linux]
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v1
+      with:
+        fetch-depth: 1
+
+    - name: Build and push Docker image
+      env:
+        DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+        DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+        DOCKER_IMAGE: aasigmazero/sigma-zero-api:latest
+      run: |
+        docker build -t $DOCKER_IMAGE .
+        echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
+        docker push $DOCKER_IMAGE
+
+    - name: SSH into Droplet and deploy
+      uses: appleboy/ssh-action@v1.0.3
+      with:
+        host: ${{ secrets.DROPLET_IP }}
+        username: devops
+        key: ${{ secrets.DROPLET_SSH_PRIVATE_KEY }}
+        script: |
+          docker-compose -f ./docker-compose.yaml down
+          docker-compose -f ./docker-compose.yaml up -d
